@@ -46,7 +46,7 @@ namespace XOREncrypt
             byte[] shellcodeBytes = File.ReadAllBytes(args[0]);
             // This is the encryption key. If changed, must also be changed in the
             // project that runs the shellcode.
-            char[] cryptor = new char[] { 'E', 'x', 'a', 'm', 'p', 'l', 'e', 'K', 'e', 'y', '\0' };
+            char[] cryptor = new char[] { '3', 'd', '8', '4', 'c', '9', '2', 'd', '0', '8', '\0' };
             byte[] encShellcodeBytes = XorByteArray(shellcodeBytes, cryptor);
             File.WriteAllBytes("encrypted.bin", encShellcodeBytes);
             Console.WriteLine("Wrote encoded binary to encrypted.bin.");
